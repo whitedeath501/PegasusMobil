@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#05060a" />
+  <meta name="description" content="PegasusMobil — o ápice do luxo automotivo. Hipercarros raros, coleção privada, experiência VIP e presença global de elite." />
+  <meta name="keywords" content="luxo automotivo, hipercarros, PegasusMobil, carros raros, coleção privada, consultoria VIP" />
+  <meta property="og:title" content="PegasusMobil | O ápice do luxo automotivo" />
+  <meta property="og:description" content="Uma marca automotiva cinematográfica, premium e global, com foco em hipercarros raros e atendimento VIP." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <title>PegasusMobil | O ápice do luxo automotivo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#05060a;
+      --bg2:#090b12;
+      --card:rgba(12,16,25,.68);
+      --stroke:rgba(255,255,255,.10);
+      --text:#eef2ff;
+      --muted:rgba(238,242,255,.72);
+      --gold:#d8b46a;
+      --gold2:#f6e2a0;
+      --silver:#d5dde8;
+      --blue:#0f1f3a;
+      --blue2:#142647;
+      --shadow:0 20px 70px rgba(0,0,0,.45);
+      --radius:24px;
+      --radius2:34px;
+      --max:1280px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(216,180,106,.12), transparent 22%),
+        radial-gradient(circle at 80% 10%, rgba(96,123,255,.10), transparent 18%),
+        linear-gradient(180deg, #05060a 0%, #070912 42%, #040507 100%);
+      color:var(--text);
+      overflow-x:hidden;
+      cursor:none;
+    }
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size:48px 48px;
+      mask-image:radial-gradient(circle at center, black 30%, transparent 100%);
+      opacity:.15;
+    }
+    body.no-scroll{overflow:hidden}
+    .container{width:min(var(--max), calc(100% - 40px)); margin:0 auto}
+    .glass{
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(18px);
+      border-radius:var(--radius2);
+      box-shadow:var(--shadow);
+    }
+    .loader{
+      position:fixed; inset:0; z-index:9999;
+      display:grid; place-items:center;
+      background:#040507;
+      transition:.8s ease;
+    }
+    .loader.hide{opacity:0; visibility:hidden}
+    .loader .ring{
+      width:84px; height:84px; border-radius:50%;
+      border:2px solid rgba(255,255,255,.08);
+      border-top-color:var(--gold2);
+      animation:spin 1s linear infinite;
+      box-shadow:0 0 40px rgba(216,180,106,.2);
+    }
+    .loader .text{
+      position:absolute;
+      bottom:11vh;
+      color:var(--muted);
+      letter-spacing:.3em;
+      text-transform:uppercase;
+      font-size:.72rem;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .cursor{
+      position:fixed; top:0; left:0;
+      width:18px; height:18px;
+      border-radius:50%;
+      pointer-events:none;
+      z-index:10000;
+      background:rgba(246,226,160,.92);
+      box-shadow:0 0 18px rgba(246,226,160,.65);
+      transform:translate(-50%,-50%);
+      transition:width .18s ease, height .18s ease, background .18s ease, box-shadow .18s ease, opacity .25s ease;
+      mix-blend-mode:screen;
+    }
+    .cursor.active{
+      width:56px; height:56px;
+      background:rgba(246,226,160,.12);
+      box-shadow:0 0 28px rgba(246,226,160,.24);
+    }
+
+    .spotlight{
+      position:fixed; inset:0; z-index:1;
+      pointer-events:none;
+      background:radial-gradient(circle 240px at var(--mx,50%) var(--my,30%), rgba(216,180,106,.11), transparent 60%);
+      mix-blend-mode:screen;
+      opacity:.9;
+    }
+
+    .nav{
+      position:fixed; top:18px; left:0; right:0; z-index:1000;
+      transition:.35s ease;
+    }
+    .nav.scrolled .bar{
+      transform:translateY(-2px);
+      background:rgba(5,6,10,.76);
+      box-shadow:0 20px 80px rgba(0,0,0,.55);
+    }
+    .nav .bar{
+      display:flex; align-items:center; justify-content:space-between; gap:18px;
+      padding:16px 20px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(5,6,10,.58);
+      backdrop-filter:blur(22px) saturate(140%);
+      box-shadow:var(--shadow);
+      border-radius:999px;
+      position:relative;
+      overflow:hidden;
+    }
+    .nav .bar::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:linear-gradient(120deg, transparent 20%, rgba(246,226,160,.12), transparent 40%, transparent 60%, rgba(215,221,232,.10), transparent 80%);
+      transform:translateX(-140%);
+      transition:transform .8s ease;
+      pointer-events:none;
+    }
+    .nav .bar:hover::before{transform:translateX(140%)}
+    .brand{
+      display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text);
+      min-width:fit-content;
+    }
+    .brand-mark{
+      width:42px; height:42px; border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, var(--gold2), var(--gold) 45%, #8d6a2d 100%);
+      box-shadow:0 0 30px rgba(216,180,106,.35);
+      position:relative;
+    }
+    .brand-mark::after{
+      content:"";
+      position:absolute; inset:11px 9px;
+      border:1.5px solid rgba(5,6,10,.6);
+      border-radius:50%;
+    }
+    .brand strong{
+      font-family:Cormorant Garamond,serif;
+      font-size:1.55rem;
+      letter-spacing:.08em;
+    }
+    .nav-links{
+      display:flex; gap:22px; flex-wrap:wrap; justify-content:center;
+    }
+    .nav-links a{
+      color:var(--muted); text-decoration:none; font-size:.92rem; position:relative;
+      transition:.3s ease;
+    }
+    .nav-links a::after{
+      content:""; position:absolute; left:0; bottom:-6px; width:0; height:1px;
+      background:linear-gradient(90deg,var(--gold),var(--silver)); transition:.3s ease;
+    }
+    .nav-links a:hover{color:#fff}
+    .nav-links a:hover::after{width:100%}
+    .nav-cta{
+      padding:12px 18px; border-radius:999px; color:#fff; text-decoration:none;
+      background:linear-gradient(135deg, rgba(216,180,106,.95), rgba(110,125,160,.35));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 10px 30px rgba(216,180,106,.15);
+      white-space:nowrap;
+      position:relative;
+      overflow:hidden;
+    }
+    .nav-cta::before{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(120deg, transparent 20%, rgba(255,255,255,.26), transparent 45%);
+      transform:translateX(-120%);
+      transition:transform .7s ease;
+    }
+    .nav-cta:hover::before{transform:translateX(120%)}
+
+    .menu-btn{
+      display:none;
+      width:46px; height:46px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:#fff;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+    .menu-btn span{
+      width:18px; height:2px; background:#fff; display:block; position:relative;
+    }
+    .menu-btn span::before, .menu-btn span::after{
+      content:""; position:absolute; left:0; width:18px; height:2px; background:#fff; transition:.3s ease;
+    }
+    .menu-btn span::before{top:-6px}
+    .menu-btn span::after{top:6px}
+    .menu-btn.open span{background:transparent}
+    .menu-btn.open span::before{top:0; transform:rotate(45deg)}
+    .menu-btn.open span::after{top:0; transform:rotate(-45deg)}
+
+    .mobile-menu{
+      position:fixed; inset:0; z-index:999;
+      background:rgba(4,5,8,.82);
+      backdrop-filter:blur(24px);
+      transform:translateY(-100%);
+      transition:transform .55s cubic-bezier(.2,.8,.2,1);
+      display:flex;
+      align-items:flex-end;
+      padding:100px 20px 24px;
+    }
+    .mobile-menu.open{transform:translateY(0)}
+    .mobile-menu .panel{
+      width:100%;
+      max-width:520px;
+      margin:0 auto;
+      padding:24px;
+      border-radius:32px;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 30px 100px rgba(0,0,0,.55);
+    }
+    .mobile-menu a{
+      display:block;
+      padding:16px 0;
+      color:#fff;
+      text-decoration:none;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      font-size:1.1rem;
+    }
+
+    .hero{
+      min-height:100svh;
+      display:grid;
+      align-items:center;
+      position:relative;
+      padding:120px 0 70px;
+      overflow:hidden;
+      perspective:1200px;
+    }
+    .hero-bg{
+      position:absolute; inset:-8%;
+      background:
+        linear-gradient(180deg, rgba(5,6,10,.28), rgba(5,6,10,.88)),
+        url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=80') center/cover no-repeat;
+      filter:saturate(1.06) contrast(1.12) brightness(.88);
+      transform:scale(1.08) translate3d(0,0,0);
+      will-change:transform;
+    }
+    .hero-overlay{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(216,180,106,.17), transparent 18%),
+        radial-gradient(circle at 70% 20%, rgba(88,117,255,.14), transparent 22%),
+        radial-gradient(circle at var(--mx,50%) var(--my,30%), rgba(246,226,160,.10), transparent 18%);
+    }
+    .hero-grid{
+      position:relative; z-index:2;
+      display:grid; grid-template-columns:1.2fr .8fr; gap:36px;
+      align-items:end;
+    }
+    .eyebrow{
+      display:inline-flex; gap:10px; align-items:center;
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      backdrop-filter:blur(14px);
+      color:var(--gold2);
+      font-size:.88rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .eyebrow span{
+      width:8px; height:8px; border-radius:50%;
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(216,180,106,.8);
+    }
+    h1{
+      font-family:Cormorant Garamond, serif;
+      font-size:clamp(4rem, 10vw, 8.7rem);
+      line-height:.88;
+      margin:18px 0 16px;
+      letter-spacing:-.03em;
+    }
+    .title-line{
+      display:block;
+      overflow:hidden;
+      white-space:nowrap;
+    }
+    .hero p{
+      max-width:620px;
+      color:var(--muted);
+      font-size:1.05rem;
+      line-height:1.8;
+    }
+    .hero-actions{
+      display:flex; gap:14px; flex-wrap:wrap; margin-top:28px;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:15px 22px; border-radius:999px; text-decoration:none; cursor:pointer;
+      border:1px solid rgba(255,255,255,.14);
+      transition:.3s ease;
+      font-weight:600;
+      position:relative;
+      overflow:hidden;
+      transform:translateZ(0);
+      will-change:transform;
+    }
+    .btn::before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:linear-gradient(120deg, transparent 20%, rgba(255,255,255,.25), transparent 45%);
+      transform:translateX(-120%);
+      transition:transform .75s ease;
+    }
+    .btn:hover::before{transform:translateX(120%)}
+    .btn-primary{
+      color:#111;
+      background:linear-gradient(135deg, var(--gold2), var(--gold) 58%, #9f7b37);
+      box-shadow:0 20px 50px rgba(216,180,106,.22);
+    }
+    .btn-secondary{
+      color:#fff; background:rgba(255,255,255,.05); backdrop-filter:blur(12px)
+    }
+    .btn:hover{transform:translateY(-3px) scale(1.01)}
+    .hero-panel{
+      display:grid; gap:18px;
+      align-self:stretch;
+    }
+    .panel-main{
+      min-height:390px;
+      padding:20px;
+      display:flex;
+      align-items:end;
+      background:
+        linear-gradient(180deg, rgba(8,10,16,.05), rgba(8,10,16,.82)),
+        url('https://images.unsplash.com/photo-1542282088-fe8426682b8f?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      overflow:hidden;
+      position:relative;
+    }
+    .panel-main::after{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(135deg, transparent, rgba(216,180,106,.16), transparent);
+      transform:translateX(-120%);
+      animation:shine 4.5s ease-in-out infinite;
+    }
+    @keyframes shine{50%{transform:translateX(120%)}}
+    .panel-main .chip{
+      padding:10px 14px; border-radius:999px;
+      background:rgba(5,6,10,.45);
+      border:1px solid rgba(255,255,255,.12);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width:fit-content;
+      color:var(--silver);
+    }
+
+    section{padding:90px 0}
+    .section-title{
+      display:flex; align-items:end; justify-content:space-between; gap:22px; margin-bottom:28px;
+    }
+    .section-title h2{
+      font-family:Cormorant Garamond,serif;
+      font-size:clamp(2.4rem, 5vw, 4.4rem);
+      margin:0;
+    }
+    .section-title p{max-width:640px; color:var(--muted); line-height:1.8}
+    .about-grid{
+      display:grid; grid-template-columns:1.1fr .9fr; gap:20px;
+    }
+    .about-card{padding:28px}
+    .stats-mini{
+      display:grid; grid-template-columns:repeat(2,1fr); gap:16px;
+    }
+    .mini{
+      padding:18px; border-radius:22px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .mini strong{display:block; font-size:1.8rem; color:var(--gold2)}
+    .mini span{color:var(--muted)}
+    .pill-list{
+      display:flex; flex-wrap:wrap; gap:12px; margin-top:20px
+    }
+    .pill{
+      padding:10px 14px; border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.1);
+      color:#fff; font-size:.92rem;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+    .feature, .car, .contact-card, .gallery-item{
+      position:relative;
+      overflow:hidden;
+      transition:.35s ease;
+    }
+    .feature{padding:24px}
+    .feature:hover, .car:hover, .gallery-item:hover{transform:translateY(-8px)}
+    .feature i{
+      display:inline-flex; width:50px; height:50px; border-radius:16px;
+      background:linear-gradient(135deg, rgba(216,180,106,.22), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.10);
+      margin-bottom:14px;
+    }
+    .feature h3, .car h3{margin:8px 0 8px; font-size:1.2rem}
+    .feature p, .car p, .contact-card p{color:var(--muted); line-height:1.7}
+    .numbers{
+      display:grid; grid-template-columns:repeat(4,1fr); gap:18px;
+    }
+    .number-card{
+      text-align:center; padding:28px 18px;
+    }
+    .number-card .count{font-size:clamp(2rem, 4vw, 3.2rem); font-weight:800; color:var(--gold2)}
+    .number-card span{color:var(--muted)}
+
+    .filters{
+      display:grid;
+      grid-template-columns:1.2fr .7fr .7fr .7fr auto;
+      gap:12px;
+      margin:0 0 20px;
+    }
+    .filters input, .filters select{
+      width:100%;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      color:#fff;
+      padding:14px 16px;
+      outline:none;
+      font:inherit;
+    }
+    .catalog-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:22px;
+    }
+    .car{
+      background:rgba(10,14,22,.78);
+      transform-style:preserve-3d;
+      will-change:transform;
+    }
+    .car:hover{
+      box-shadow:0 32px 90px rgba(0,0,0,.56);
+    }
+    .car-img{
+      height:260px;
+      background-size:cover;
+      background-position:center;
+      position:relative;
+      transform:translateZ(24px);
+    }
+    .car-img::before{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(246,226,160,.08), transparent 25%, rgba(5,6,10,.88));
+      opacity:0;
+      transition:.35s ease;
+    }
+    .car:hover .car-img::before{opacity:1}
+    .car-img::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(145deg, transparent, rgba(255,255,255,.12), transparent 55%),
+        linear-gradient(180deg, transparent, rgba(5,6,10,.78));
+      opacity:.65;
+    }
+    .car-body{
+      padding:22px;
+      position:relative;
+      transform:translateZ(20px);
+    }
+    .meta{
+      display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 16px
+    }
+    .meta span{
+      font-size:.82rem;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--silver);
+    }
+    .price{
+      color:var(--gold2);
+      font-weight:700;
+      font-size:1.1rem;
+      margin:18px 0 0;
+    }
+    .favorite{
+      position:absolute;
+      top:16px; right:16px;
+      width:42px; height:42px;
+      border-radius:50%;
+      display:grid; place-items:center;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(5,6,10,.45);
+      color:#fff;
+      cursor:pointer;
+      z-index:2;
+    }
+    .favorite.active{color:var(--gold2); box-shadow:0 0 20px rgba(246,226,160,.18)}
+    .tag{
+      position:absolute;
+      left:16px; top:16px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(216,180,106,.16);
+      border:1px solid rgba(246,226,160,.22);
+      color:var(--gold2);
+      font-size:.76rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      z-index:2;
+    }
+    .car-expander{
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .45s ease;
+      color:var(--muted);
+      line-height:1.7;
+    }
+    .car:hover .car-expander{max-height:120px}
+
+    .gallery-head{
+      display:flex; align-items:end; justify-content:space-between; gap:20px;
+      margin-bottom:20px;
+    }
+    .gallery-head p{max-width:700px; color:var(--muted); line-height:1.8}
+    .gallery{
+      display:grid;
+      grid-template-columns:1.4fr .9fr .9fr;
+      gap:18px;
+    }
+    .gallery-item{
+      min-height:300px;
+      border-radius:28px;
+      background-size:cover;
+      background-position:center;
+      cursor:zoom-in;
+      transform:translateZ(0);
+    }
+    .gallery-item.big{min-height:620px}
+    .gallery-item::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(180deg, transparent, rgba(5,6,10,.78)),
+        radial-gradient(circle at top, rgba(246,226,160,.18), transparent 24%);
+    }
+    .gallery-item .caption{
+      position:absolute;
+      left:18px; right:18px; bottom:18px;
+      z-index:1;
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:12px;
+    }
+
+    .contact-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:22px;
+    }
+    form{
+      padding:28px;
+      display:grid;
+      gap:14px;
+    }
+    input, select, textarea{
+      width:100%;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      color:#fff;
+      padding:14px 16px;
+      outline:none;
+      font:inherit;
+      transition:.25s ease;
+    }
+    input:focus, select:focus, textarea:focus{
+      border-color:rgba(246,226,160,.45);
+      box-shadow:0 0 0 4px rgba(246,226,160,.08);
+      transform:translateY(-1px);
+    }
+    textarea{min-height:140px; resize:vertical}
+    input::placeholder, textarea::placeholder{color:rgba(238,242,255,.55)}
+    .map{
+      min-height:100%;
+      padding:28px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      background:
+        linear-gradient(180deg, rgba(8,10,16,.38), rgba(8,10,16,.85)),
+        radial-gradient(circle at 20% 20%, rgba(216,180,106,.16), transparent 25%),
+        url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+    .social-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:14px;
+    }
+    .social-grid a{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:#fff;
+      text-decoration:none;
+    }
+
+    .vip{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:22px;
+    }
+    .vip-card{padding:28px}
+    .vip-tabs{
+      display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;
+    }
+    .vip-tabs button{
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      color:#fff;
+      cursor:pointer;
+    }
+    .vip-tabs button.active{
+      background:linear-gradient(135deg, rgba(246,226,160,.95), rgba(216,180,106,.95));
+      color:#111;
+    }
+    .vip-panel{
+      padding:20px;
+      border-radius:24px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      margin-top:14px;
+    }
+
+    footer{
+      padding:34px 0 50px;
+      color:var(--muted);
+    }
+    .footer-bar{
+      border-top:1px solid rgba(255,255,255,.10);
+      padding-top:20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      position:relative;
+    }
+    .footer-bar::before{
+      content:"";
+      position:absolute;
+      top:0; left:0;
+      width:160px; height:1px;
+      background:linear-gradient(90deg, var(--gold2), transparent);
+      box-shadow:0 0 20px rgba(246,226,160,.35);
+    }
+    .socials{display:flex; gap:12px; flex-wrap:wrap}
+    .socials a{
+      width:42px; height:42px; display:grid; place-items:center;
+      border-radius:50%;
+      color:#fff; text-decoration:none;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    .reveal{opacity:0; transform:translateY(22px) scale(.985); transition:.75s cubic-bezier(.2,.8,.2,1)}
+    .reveal.show{opacity:1; transform:none}
+
+    .modal{
+      position:fixed; inset:0; z-index:3000;
+      display:none;
+    }
+    .modal.show{display:block}
+    .modal-backdrop{
+      position:absolute; inset:0;
+      background:rgba(0,0,0,.76);
+      backdrop-filter:blur(14px);
+    }
+    .modal-panel{
+      position:relative;
+      width:min(1080px, calc(100% - 18px));
+      margin:5vh auto 0;
+      border-radius:32px;
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 30px 110px rgba(0,0,0,.72);
+      transform-origin:center center;
+    }
+    .modal-top{
+      height:440px;
+      background-size:cover;
+      background-position:center;
+      position:relative;
+    }
+    .modal-top::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(180deg, transparent, rgba(5,6,10,.88)),
+        radial-gradient(circle at 50% 20%, rgba(246,226,160,.18), transparent 26%);
+    }
+    .modal-content{padding:24px}
+    .modal-content h3{
+      margin:0 0 10px;
+      font-family:Cormorant Garamond,serif;
+      font-size:clamp(2rem, 4vw, 3.2rem);
+    }
+    .modal-specs{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      list-style:none;
+      padding:0;
+      margin:18px 0 0;
+    }
+    .modal-specs li{
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .close-modal{
+      position:absolute;
+      top:16px; right:16px;
+      width:44px; height:44px;
+      border:none;
+      border-radius:50%;
+      background:rgba(0,0,0,.42);
+      color:#fff;
+      font-size:1.5rem;
+      cursor:pointer;
+      z-index:2;
+    }
+
+    @media (max-width:1100px){
+      .hero-grid, .about-grid, .contact-grid, .gallery, .vip{grid-template-columns:1fr}
+      .grid, .catalog-grid, .numbers, .social-grid{grid-template-columns:repeat(2,1fr)}
+      .filters{grid-template-columns:1fr 1fr}
+      .panel-main{min-height:330px}
+    }
+    @media (max-width:720px){
+      body{cursor:auto}
+      .cursor{display:none}
+      .nav .bar{border-radius:24px; padding:14px}
+      .nav-links{display:none}
+      .menu-btn{display:inline-flex}
+      h1{font-size:clamp(3.2rem, 16vw, 5rem)}
+      .grid, .catalog-grid, .numbers, .social-grid, .filters, .modal-specs{grid-template-columns:1fr}
+      .gallery-item.big, .gallery-item{min-height:280px}
+      section{padding:72px 0}
+      .modal-top{height:280px}
+    }
+  </style>
+</head>
+<body>
+  <div class="loader" id="loader">
+    <div class="ring"></div>
+    <div class="text">PegasusMobil • Luxury Automotive House</div>
+  </div>
+  <div class="cursor" id="cursor"></div>
+  <div class="spotlight" id="spotlight"></div>
+
+  <header class="nav" id="nav">
+    <div class="container">
+      <div class="bar glass">
+        <a class="brand" href="#home">
+          <div class="brand-mark"></div>
+          <strong>PEGASUSMOBIL</strong>
+        </a>
+        <nav class="nav-links" aria-label="Navegação principal">
+          <a href="#sobre">Sobre</a>
+          <a href="#catalogo">Private Collection</a>
+          <a href="#experiencia">Luxury Experience</a>
+          <a href="#galeria">Galeria</a>
+          <a href="#vip">Elite Members</a>
+          <a href="#contato">Contato</a>
+        </nav>
+        <a class="nav-cta" href="#catalogo">Coleção Privada</a>
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false"><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="panel">
+      <a href="#sobre">Sobre</a>
+      <a href="#catalogo">Private Collection</a>
+      <a href="#experiencia">Luxury Experience</a>
+      <a href="#galeria">Galeria</a>
+      <a href="#vip">Elite Members</a>
+      <a href="#contato">Contato</a>
+    </div>
+  </div>
+
+  <main id="home" class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-grid">
+      <div class="reveal">
+        <div class="eyebrow"><span></span> Luxury Automotive House</div>
+        <h1>
+          <span class="title-line">PegasusMobil</span>
+        </h1>
+        <p>O ápice do luxo automotivo. Uma casa dedicada aos hipercarros mais raros do planeta, com curadoria de elite, design artesanal e presença global digna de uma marca bilionária.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#catalogo">Explorar Coleção</a>
+          <a class="btn btn-secondary" href="#contato">Agendar Consultoria</a>
+        </div>
+      </div>
+      <div class="hero-panel reveal">
+        <div class="panel-main glass">
+          <div class="chip">Edição ultra-limitada • entrega global • atendimento VIP</div>
+        </div>
+        <div class="glass" style="padding:18px 20px">
+          <div style="display:flex;justify-content:space-between;gap:14px;align-items:center">
+            <div>
+              <div style="color:var(--muted);font-size:.9rem">Coleção avaliada</div>
+              <div style="font-family:Cormorant Garamond,serif;font-size:1.7rem">Raridade em movimento</div>
+            </div>
+            <div style="color:var(--gold2);font-size:1.8rem">✦</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <section id="sobre">
+    <div class="container">
+      <div class="section-title reveal">
+        <div>
+          <h2>Sobre a empresa</h2>
+          <p>A PegasusMobil foi criada para colecionadores exigentes que procuram raridade, presença e engenharia de exceção. Cada veículo representa uma obra-prima de performance e status.</p>
+        </div>
+      </div>
+      <div class="about-grid">
+        <div class="about-card glass reveal">
+          <p>Nosso manifesto é simples: transformar desejo em legado. A PegasusMobil entrega exclusividade absoluta, performance brutal e uma experiência visual à altura das maiores casas de luxo do mundo.</p>
+          <div class="pill-list">
+            <span class="pill">Exclusividade</span><span class="pill">Luxo</span><span class="pill">Tecnologia</span><span class="pill">Performance</span><span class="pill">Raridade</span><span class="pill">Design Artesanal</span>
+          </div>
+        </div>
+        <div class="glass about-card reveal">
+          <div class="stats-mini">
+            <div class="mini"><strong>01</strong><span>Curadoria privada global</span></div>
+            <div class="mini"><strong>360°</strong><span>Experiência concierge</span></div>
+            <div class="mini"><strong>100%</strong><span>Atendimento sob medida</span></div>
+            <div class="mini"><strong>∞</strong><span>Desejo convertido em legado</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experiencia">
+    <div class="container">
+      <div class="section-title reveal">
+        <div>
+          <h2>Luxury Experience</h2>
+          <p>Um serviço pensado para elevar cada etapa da compra, da primeira consulta à entrega final, com sofisticação absoluta.</p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="feature glass reveal"><i></i><h3>Atendimento VIP</h3><p>Consultoria reservada, privada e altamente personalizada para clientes de perfil internacional.</p></div>
+        <div class="feature glass reveal"><i></i><h3>Transporte blindado internacional</h3><p>Logística premium com proteção, confidencialidade e cuidado total na movimentação do veículo.</p></div>
+        <div class="feature glass reveal"><i></i><h3>Colecionadores exclusivos</h3><p>Acesso a uma rede selecionada de compradores, investidores e apaixonados por raridades.</p></div>
+        <div class="feature glass reveal"><i></i><h3>Eventos privados</h3><p>Apresentações fechadas, unveilings cinematográficos e encontros para convidados especiais.</p></div>
+        <div class="feature glass reveal"><i></i><h3>Personalização artesanal</h3><p>Acabamentos exclusivos, materiais nobres e detalhes feitos sob encomenda.</p></div>
+        <div class="feature glass reveal"><i></i><h3>Consultoria automotiva de luxo</h3><p>Escolha estratégica do modelo ideal, foco em coleção, investimento e presença de marca.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="numbers">
+        <div class="number-card glass reveal"><div class="count" data-target="18">0</div><span>hipercarros raros</span></div>
+        <div class="number-card glass reveal"><div class="count" data-target="120">0</div><span>US$ milhões em veículos</span></div>
+        <div class="number-card glass reveal"><div class="count" data-target="42">0</div><span>clientes internacionais</span></div>
+        <div class="number-card glass reveal"><div class="count" data-target="100">0</div><span>modelos exclusivos e limitados</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="catalogo">
+    <div class="container">
+      <div class="section-title reveal">
+        <div>
+          <h2>Private Collection</h2>
+          <p>Uma coleção extraordinária com nomes lendários, especificações absurdas e presença visual de classe mundial.</p>
+        </div>
+      </div>
+
+      <div class="filters reveal">
+        <input type="search" id="searchInput" placeholder="Buscar modelo, marca ou tipo..." />
+        <select id="brandFilter">
+          <option value="">Todas as marcas</option>
+          <option>Rolls-Royce</option>
+          <option>Bugatti</option>
+          <option>Pagani</option>
+          <option>De Tomaso</option>
+          <option>Ferrari</option>
+          <option>Lotus</option>
+          <option>Bentley</option>
+          <option>Aston Martin</option>
+          <option>McLaren</option>
+          <option>Rimac</option>
+          <option>Lamborghini</option>
+        </select>
+        <select id="speedFilter">
+          <option value="">Velocidade</option>
+          <option value="300">Até 300 km/h</option>
+          <option value="350">Até 350 km/h</option>
+          <option value="400">Até 400 km/h</option>
+          <option value="999">Acima de 400 km/h</option>
+        </select>
+        <select id="priceFilter">
+          <option value="">Preço</option>
+          <option value="2">Até US$ 2M</option>
+          <option value="5">Até US$ 5M</option>
+          <option value="10">Até US$ 10M</option>
+          <option value="999">Acima de US$ 10M</option>
+        </select>
+        <button class="btn btn-secondary" id="favOnlyBtn" type="button">Favoritos</button>
+      </div>
+
+      <div class="catalog-grid" id="cars"></div>
+    </div>
+  </section>
+
+  <section id="galeria">
+    <div class="container">
+      <div class="gallery-head reveal">
+        <div>
+          <h2 class="section-title" style="margin-bottom:10px"><span>Global Presence</span></h2>
+          <p>Imagens em grande escala, iluminação dramática e transições refinadas para reforçar a sensação de exclusividade.</p>
+        </div>
+      </div>
+      <div class="gallery">
+        <div class="gallery-item big glass reveal" data-full="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2200&q=80" style="background-image:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=80')">
+          <div class="caption"><div><strong>Grand Touring Aura</strong><div style="color:var(--muted)">Cinematográfico</div></div></div>
+        </div>
+        <div class="gallery-item glass reveal" data-full="https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=2200&q=80" style="background-image:url('https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=80')">
+          <div class="caption"><div><strong>Velocity Sculpture</strong></div></div>
+        </div>
+        <div class="gallery-item glass reveal" data-full="https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=2200&q=80" style="background-image:url('https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=900&q=80')">
+          <div class="caption"><div><strong>Carbon Elegance</strong></div></div>
+        </div>
+        <div class="gallery-item glass reveal" data-full="https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=2200&q=80" style="background-image:url('https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=900&q=80')">
+          <div class="caption"><div><strong>Electric Apex</strong></div></div>
+        </div>
+        <div class="gallery-item glass reveal" data-full="https://images.unsplash.com/photo-1489824904134-891ab64532f1?auto=format&fit=crop&w=2200&q=80" style="background-image:url('https://images.unsplash.com/photo-1489824904134-891ab64532f1?auto=format&fit=crop&w=900&q=80')">
+          <div class="caption"><div><strong>Handcrafted Luxury</strong></div></div>
+        </div>
+        <div class="gallery-item glass reveal" data-full="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=2200&q=80" style="background-image:url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=900&q=80')">
+          <div class="caption"><div><strong>Rare Engineering</strong></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="vip">
+    <div class="container">
+      <div class="section-title reveal">
+        <div>
+          <h2>Elite Members</h2>
+          <p>Área visual exclusiva para colecionadores, com login premium, dashboard futurista e acesso a conteúdo reservado.</p>
+        </div>
+      </div>
+      <div class="vip">
+        <div class="glass vip-card reveal">
+          <div class="vip-tabs">
+            <button class="active" data-vip-tab="login" type="button">Login</button>
+            <button data-vip-tab="register" type="button">Register</button>
+          </div>
+          <div class="vip-panel" id="vipLogin">
+            <form id="vipLoginForm" style="padding:0">
+              <input id="vipEmail" type="email" placeholder="E-mail VIP" />
+              <input id="vipPassword" type="password" placeholder="Senha VIP" />
+             <a class="btn btn-primary" href="login.html">Entrar na Área Elite</a>
+            </form>
+          </div>
+          <div class="vip-panel" id="vipRegister" style="display:none">
+            <form id="vipRegisterForm" style="padding:0">
+              <input type="text" placeholder="Nome completo" />
+              <input type="email" placeholder="E-mail corporativo" />
+              <input type="password" placeholder="Criar senha premium" />
+              <button class="btn btn-secondary" type="submit">Criar Conta</button>
+            </form>
+          </div>
+        </div>
+        <div class="glass vip-card reveal">
+  <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; padding:20px; text-align:center; gap:20px;">
+    <div style="font-size:3rem;">✦</div>
+    <h3 style="font-family:Cormorant Garamond,serif; font-size:2rem; margin:0; color:var(--gold2);">Área Elite Members</h3>
+    <p style="color:var(--muted); line-height:1.8;">Acesse seu portal exclusivo PegasusMobil com sua conta premium e desfrute de conteúdo reservado para colecionadores de elite.</p>
+    <a class="btn btn-primary" href="login.html" style="width:100%; justify-content:center;">Acessar Portal VIP</a>
+  </div>
+</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato">
+    <div class="container">
+      <div class="section-title reveal">
+        <div>
+          <h2>Contato</h2>
+          <p>Solicite uma consultoria privada e descubra qual hipercarro combina com a sua coleção e com a sua visão de exclusividade.</p>
+        </div>
+      </div>
+      <div class="contact-grid">
+        <form class="glass contact-card reveal" id="contactForm">
+          <input type="text" id="name" placeholder="Nome" required />
+          <input type="email" id="email" placeholder="E-mail" required />
+          <input type="tel" id="phone" placeholder="Telefone" />
+          <select id="car">
+            <option>Carro desejado</option>
+            <option>Rolls-Royce Boat Tail</option>
+            <option>Bugatti La Voiture Noire</option>
+            <option>Pagani Zonda HP Barchetta</option>
+            <option>Rimac Nevera</option>
+          </select>
+          <textarea id="message" placeholder="Mensagem"></textarea>
+          <button class="btn btn-primary" type="submit">Enviar solicitação</button>
+        </form>
+        <div class="glass map reveal">
+          <div>
+            <div class="eyebrow" style="margin-bottom:14px"><span></span> Atendimento global</div>
+            <h3 style="font-family:Cormorant Garamond,serif;font-size:2.4rem;margin:0 0 10px">Presença internacional com postura de elite.</h3>
+            <p>Uma marca pensada para clientes que exigem confidencialidade, estética impecável e uma jornada de compra memorável.</p>
+            <p style="margin-top:18px">contact@pegasusmobil.proton.me</p>
+            <div class="social-grid">
+              <a href="#" aria-label="Instagram">Instagram <span>↗</span></a>
+              <a href="#" aria-label="TikTok">TikTok <span>↗</span></a>
+              <a href="#" aria-label="YouTube">YouTube <span>↗</span></a>
+              <a href="#" aria-label="LinkedIn">LinkedIn <span>↗</span></a>
+              <a href="#" aria-label="X">X / Twitter <span>↗</span></a>
+              <a href="#" aria-label="E-mail">E-mail <span>↗</span></a>
+            </div>
+          </div>
+          <div class="footer-bar" style="border-top:none;padding-top:0">
+            <div class="socials">
+              <a href="#">in</a><a href="#">ig</a><a href="#">x</a><a href="#">yt</a>
+            </div>
+            <div style="text-align:right">
+              <div style="color:var(--gold2);font-weight:700">PegasusMobil</div>
+              <small>Luxury Automotive House</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bar">
+        <div>
+          <strong style="color:#fff">PegasusMobil</strong><br>
+          Exclusividade, poder e refinamento em cada detalhe.
+        </div>
+        <div>
+          <div style="color:var(--gold2);font-weight:700;margin-bottom:8px">Newsletter de Elite</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <input type="email" placeholder="Seu e-mail premium" style="min-width:220px;max-width:280px" />
+            <button class="btn btn-secondary" type="button">Assinar</button>
+          </div>
+        </div>
+        <div>
+          <div>Luxury Experience</div>
+          <div>Private Collection</div>
+          <div>Global Presence</div>
+          <div>Elite Members</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="close-modal" data-close-modal aria-label="Fechar">×</button>
+      <div class="modal-top" id="lightboxImg"></div>
+      <div class="modal-content">
+        <h3 id="lightboxTitle"></h3>
+        <p id="lightboxText"></p>
+        <ul class="modal-specs" id="lightboxSpecs"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cars = [
+      {name:"Rolls-Royce Boat Tail",brand:"Rolls-Royce",speed:250,power:"~563 hp",acc:"~5.0 s",rarity:"Extremamente rara",price:28,image:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",tag:"Ultra Rare",desc:"Uma obra-prima sob medida, marcada por presença escultural e acabamento artesanal."},
+      {name:"Rolls-Royce Sweptail",brand:"Rolls-Royce",speed:250,power:"~453 hp",acc:"~5.6 s",rarity:"Ultra rara",price:13,image:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",tag:"Bespoke",desc:"Um luxo praticamente irrepetível, criado para uma única visão de colecionador."},
+      {name:"Bugatti La Voiture Noire",brand:"Bugatti",speed:420,power:"~1500 hp",acc:"~2.4 s",rarity:"Hiper exclusiva",price:18,image:"https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80",tag:"Legendary",desc:"Ícone absoluto do design automotivo, criado para a elite mais exigente do planeta."},
+      {name:"Bugatti Centodieci",brand:"Bugatti",speed:380,power:"~1600 hp",acc:"~2.4 s",rarity:"Limitadíssima",price:9,image:"https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1200&q=80",tag:"Limited",desc:"Uma celebração rara da herança Bugatti com postura futurista e brutal."},
+      {name:"Bugatti Chiron Super Sport 300+",brand:"Bugatti",speed:490,power:"1600 hp",acc:"2.3 s",rarity:"Extremamente rara",price:5,image:"https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80",tag:"Speed",desc:"Máquina criada para números absurdos e presença visual incomparável."},
+      {name:"Bugatti Mistral",brand:"Bugatti",speed:420,power:"1600 hp",acc:"~2.4 s",rarity:"Sofisticada",price:5,image:"https://images.unsplash.com/photo-1502161254066-6c74afbf07aa?auto=format&fit=crop&w=1200&q=80",tag:"Roadster",desc:"Um roadster de elegância extrema com assinatura mecânica poderosa."},
+      {name:"Pagani Zonda HP Barchetta",brand:"Pagani",speed:355,power:"~789 hp",acc:"~3.1 s",rarity:"Colecionável raro",price:17,image:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",tag:"Art Piece",desc:"Escultura aberta de altíssimo nível, feita para colecionadores do extraordinário."},
+      {name:"De Tomaso P72",brand:"De Tomaso",speed:355,power:"~700 hp",acc:"~3.0 s",rarity:"Raridade moderna",price:1.8,image:"https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80",tag:"Modern",desc:"Uma leitura moderna do luxo mecânico com linhas que parecem saídas do futuro."},
+      {name:"Ferrari LaFerrari",brand:"Ferrari",speed:350,power:"~950 hp",acc:"<3.0 s",rarity:"Icônica",price:4,image:"https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=80",tag:"Icon",desc:"A combinação perfeita entre desempenho híbrido e status de coleção."},
+      {name:"Lotus Evija",brand:"Lotus",speed:320,power:"~2000 hp",acc:"<3.0 s",rarity:"Tecnológica",price:2.3,image:"https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1200&q=80",tag:"EV",desc:"Uma visão elétrica extrema com presença futurista e agressiva."},
+      {name:"Bentley Bacalar",brand:"Bentley",speed:320,power:"~650 hp",acc:"~3.5 s",rarity:"Handcrafted",price:2,image:"https://images.unsplash.com/photo-1489824904134-891ab64532f1?auto=format&fit=crop&w=1200&q=80",tag:"Crafted",desc:"Luxo artesanal com sofisticação silenciosa e acabamento absoluto."},
+      {name:"Aston Martin Vulcan",brand:"Aston Martin",speed:320,power:"~820 hp",acc:"~2.9 s",rarity:"Track legend",price:2.5,image:"https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80",tag:"Track",desc:"Lenda de pista com postura dramática e vocação de colecionador."},
+      {name:"McLaren Speedtail",brand:"McLaren",speed:403,power:"1050 hp",acc:"~2.9 s",rarity:"Hyper-GT",price:2.2,image:"https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=1200&q=80",tag:"Hyper-GT",desc:"Aerodinâmica ultrafina e elegância futurista em velocidade real."},
+      {name:"Rimac Nevera",brand:"Rimac",speed:412,power:"1914 hp",acc:"1.85 s",rarity:"Elétrica extrema",price:2.4,image:"https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80",tag:"Electric",desc:"Potência elétrica absurda com execução digna de cinema."},
+      {name:"Ferrari FXX-K Evo",brand:"Ferrari",speed:350,power:"1050 hp",acc:"~2.5 s",rarity:"Racing masterpiece",price:3,image:"https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1200&q=80",tag:"Race",desc:"Uma máquina de pista com linguagem de obra-prima."},
+      {name:"Aston Martin Valkyrie",brand:"Aston Martin",speed:402,power:"~1160 hp",acc:"~2.5 s",rarity:"Fórmula de rua",price:3.5,image:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",tag:"Apex",desc:"A essência da Fórmula transformada em presença de rua."},
+      {name:"Lamborghini Sián",brand:"Lamborghini",speed:350,power:"~819 hp",acc:"<2.8 s",rarity:"Híbrido raro",price:3,image:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",tag:"Hybrid",desc:"Um híbrido raro com teatralidade e assinatura Lamborghini."},
+      {name:"Lamborghini Veneno",brand:"Lamborghini",speed:355,power:"750 hp",acc:"2.8 s",rarity:"Extremamente raro",price:8,image:"https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80",tag:"Ultra Rare",desc:"Uma peça de impacto visual extremo, feita para impressionar."}
+    ];
+
+    const state = { search:'', brand:'', speed:'', price:'', favOnly:false, favorites: JSON.parse(localStorage.getItem('pegasus_favs')||'[]'), selected:null };
+    const carsEl = document.getElementById('cars');
+    const favBtn = document.getElementById('favOnlyBtn');
+
+    function persistFavs(){ localStorage.setItem('pegasus_favs', JSON.stringify(state.favorites)); }
+    function isFav(name){ return state.favorites.includes(name); }
+
+    function renderCars(){
+      let data = cars.filter(c => {
+        const s = state.search.toLowerCase();
+        const matchesSearch = !s || [c.name,c.brand,c.tag,c.rarity].join(' ').toLowerCase().includes(s);
+        const matchesBrand = !state.brand || c.brand === state.brand;
+        const matchesSpeed = !state.speed || (state.speed === '999' ? c.speed > 400 : c.speed <= +state.speed);
+        const priceM = c.price;
+        const matchesPrice = !state.price || (state.price === '999' ? priceM > 10 : priceM <= +state.price);
+        const matchesFav = !state.favOnly || isFav(c.name);
+        return matchesSearch && matchesBrand && matchesSpeed && matchesPrice && matchesFav;
+      });
+
+      carsEl.innerHTML = data.map((c, i) => `
+        <article class="car glass reveal" data-name="${c.name}" data-brand="${c.brand}" data-speed="${c.speed}" data-price="${c.price}">
+          <button class="favorite ${isFav(c.name) ? 'active' : ''}" data-fav="${c.name}" type="button" aria-label="Favoritar ${c.name}">❤</button>
+          <div class="tag">${c.tag}</div>
+          <div class="car-img lazy-bg" data-bg="${c.image}"></div>
+          <div class="car-body">
+            <h3>${c.name}</h3>
+            <div style="color:var(--gold2);font-weight:600">${c.brand}</div>
+            <div class="meta">
+              <span>Velocidade: ${c.speed} km/h</span>
+              <span>Potência: ${c.power}</span>
+              <span>Aceleração: ${c.acc}</span>
+              <span>Raridade: ${c.rarity}</span>
+            </div>
+            <p>${c.desc}</p>
+            <div class="car-expander">Uma leitura visual premium do modelo, com acabamento de catálogo internacional e sensação de exclusividade imediata.</div>
+            <div class="price">US$ ${c.price}${c.price < 2 ? 'M' : ' milhões'.replace(' milhões','M')}</div>
+            <button class="btn btn-secondary open-modal" type="button" data-index="${cars.findIndex(x => x.name === c.name)}" style="margin-top:16px">Ver Detalhes</button>
+          </div>
+        </article>
+      `).join('');
+
+      ioReveal();
+      ioLazy();
+    }
+
+    function ioReveal(){
+      document.querySelectorAll('.reveal:not(.show)').forEach(el => revealObserver.observe(el));
+      document.querySelectorAll('.car').forEach(card => initTilt(card));
+    }
+
+    function ioLazy(){
+      document.querySelectorAll('.lazy-bg').forEach(el => bgObserver.observe(el));
+    }
+
+    const revealObserver = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); });
+    }, {threshold:.12});
+
+    const bgObserver = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          const el = e.target;
+          el.style.backgroundImage = `url('${el.dataset.bg}')`;
+          bgObserver.unobserve(el);
+        }
+      });
+    }, {threshold:.08});
+
+    function initTilt(card){
+      if(card.dataset.tiltInit) return;
+      card.dataset.tiltInit = '1';
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        const rx = (y - 0.5) * -10;
+        const ry = (x - 0.5) * 12;
+        card.style.transform = `perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    }
+
+    const modal = document.getElementById('lightbox');
+    const modalImg = document.getElementById('lightboxImg');
+    const modalTitle = document.getElementById('lightboxTitle');
+    const modalText = document.getElementById('lightboxText');
+    const modalSpecs = document.getElementById('lightboxSpecs');
+
+    function openModal(index){
+      const c = cars[index];
+      if(!c) return;
+      state.selected = index;
+      modalImg.style.backgroundImage = `url('${c.image}')`;
+      modalTitle.textContent = c.name;
+      modalText.textContent = c.desc;
+      modalSpecs.innerHTML = `
+        <li><strong>Marca:</strong> ${c.brand}</li>
+        <li><strong>Velocidade:</strong> ${c.speed} km/h</li>
+        <li><strong>Potência:</strong> ${c.power}</li>
+        <li><strong>Aceleração:</strong> ${c.acc}</li>
+        <li><strong>Raridade:</strong> ${c.rarity}</li>
+        <li><strong>Preço:</strong> US$ ${c.price}${c.price < 2 ? 'M' : ' milhões'.replace(' milhões','M')}</li>
+      `;
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
+      document.body.classList.add('no-scroll');
+    }
+
+    function closeModal(){
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
+      document.body.classList.remove('no-scroll');
+    }
+
+    document.addEventListener('click', (e) => {
+      const open = e.target.closest('.open-modal');
+      const fav = e.target.closest('[data-fav]');
+      if(open) openModal(+open.dataset.index);
+      if(fav){
+        const name = fav.dataset.fav;
+        state.favorites = state.favorites.includes(name) ? state.favorites.filter(x => x !== name) : [...state.favorites, name];
+        persistFavs();
+        renderCars();
+      }
+      if(e.target.matches('[data-close-modal]')) closeModal();
+
+      const tab = e.target.closest('[data-vip-tab]');
+      if(tab){
+        document.querySelectorAll('.vip-tabs button').forEach(b=>b.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('vipLogin').style.display = tab.dataset.vipTab === 'login' ? 'block' : 'none';
+        document.getElementById('vipRegister').style.display = tab.dataset.vipTab === 'register' ? 'block' : 'none';
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if(e.key === 'Escape' && modal.classList.contains('show')) closeModal();
+    });
+
+    document.getElementById('searchInput').addEventListener('input', e => { state.search = e.target.value; renderCars(); });
+    document.getElementById('brandFilter').addEventListener('change', e => { state.brand = e.target.value; renderCars(); });
+    document.getElementById('speedFilter').addEventListener('change', e => { state.speed = e.target.value; renderCars(); });
+    document.getElementById('priceFilter').addEventListener('change', e => { state.price = e.target.value; renderCars(); });
+    favBtn.addEventListener('click', () => { state.favOnly = !state.favOnly; favBtn.textContent = state.favOnly ? 'Todos' : 'Favoritos'; renderCars(); });
+
+    const cursor = document.getElementById('cursor');
+    const spotlight = document.getElementById('spotlight');
+    const heroBg = document.getElementById('heroBg');
+    const nav = document.getElementById('nav');
+    let mx = innerWidth / 2, my = innerHeight / 2, tx = mx, ty = my;
+
+    window.addEventListener('mousemove', (e) => {
+      mx = e.clientX; my = e.clientY;
+      document.documentElement.style.setProperty('--mx', mx + 'px');
+      document.documentElement.style.setProperty('--my', my + 'px');
+      if(cursor){ cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; }
+    });
+
+    document.querySelectorAll('a,button,input,select,textarea,.car,.gallery-item').forEach(el=>{
+      el.addEventListener('mouseenter', () => cursor?.classList.add('active'));
+      el.addEventListener('mouseleave', () => cursor?.classList.remove('active'));
+    });
+
+    window.addEventListener('scroll', () => {
+      const y = scrollY;
+      nav.classList.toggle('scrolled', y > 20);
+      heroBg.style.transform = `scale(1.08) translate3d(0, ${Math.min(y * 0.12, 60)}px, 0)`;
+    }, {passive:true});
+
+    const cards = [];
+    function animate(){
+      tx += (mx - tx) * .08;
+      ty += (my - ty) * .08;
+      spotlight.style.transform = `translate(${tx}px, ${ty}px)`;
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    const counters = document.querySelectorAll('.count');
+    const counterIO = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          const el = entry.target;
+          const target = +el.dataset.target;
+          let n = 0;
+          const step = Math.max(1, Math.ceil(target / 60));
+          const tick = () => {
+            n += step;
+            if(n >= target){ el.textContent = target + (target === 120 ? 'M+' : '+'); return; }
+            el.textContent = n + (target === 120 ? 'M+' : '+');
+            requestAnimationFrame(tick);
+          };
+          tick();
+          counterIO.unobserve(el);
+        }
+      });
+    }, {threshold:.5});
+    counters.forEach(c => counterIO.observe(c));
+
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      menuBtn.classList.toggle('open', open);
+      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      mobileMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
+      document.body.classList.toggle('no-scroll', open);
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      menuBtn.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('no-scroll');
+    }));
+
+    document.querySelectorAll('.gallery-item').forEach(item => {
+      item.addEventListener('click', () => {
+        openGalleryModal(item.dataset.full, item.querySelector('strong')?.textContent || 'PegasusMobil');
+      });
+    });
+
+    const galleryModal = document.createElement('div');
+    galleryModal.className = 'modal';
+    galleryModal.id = 'galleryModal';
+    galleryModal.innerHTML = `
+      <div class="modal-backdrop" data-close-gallery></div>
+      <div class="modal-panel">
+        <button class="close-modal" data-close-gallery aria-label="Fechar">×</button>
+        <div class="modal-top" id="galleryModalImg"></div>
+        <div class="modal-content">
+          <h3 id="galleryModalTitle"></h3>
+          <p>Visual ampliado com transição cinematográfica e leitura premium do frame.</p>
+        </div>
+      </div>`;
+    document.body.appendChild(galleryModal);
+
+    function openGalleryModal(src, title){
+      document.getElementById('galleryModalImg').style.backgroundImage = `url('${src}')`;
+      document.getElementById('galleryModalTitle').textContent = title;
+      galleryModal.classList.add('show');
+      galleryModal.setAttribute('aria-hidden','false');
+      document.body.classList.add('no-scroll');
+    }
+    document.addEventListener('click', e => {
+      if(e.target.matches('[data-close-gallery]')){
+        galleryModal.classList.remove('show');
+        galleryModal.setAttribute('aria-hidden','true');
+        document.body.classList.remove('no-scroll');
+      }
+    });
+
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      if(!name || !email || !email.includes('@')) {
+        alert('Preencha nome e e-mail corretamente.');
+        return;
+      }
+      alert('Solicitação enviada com sucesso. A equipe PegasusMobil entrará em contato.');
+      e.target.reset();
+    });
+
+    document.getElementById('vipLoginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Acesso VIP demonstrativo concedido.');
+    });
+    document.getElementById('vipRegisterForm').addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Cadastro premium demonstrativo concluído.');
+    });
+
+    window.addEventListener('load', () => {
+      renderCars();
+      ioReveal();
+      ioLazy();
+      setTimeout(() => document.getElementById('loader').classList.add('hide'), 650);
+    });
+  </script>
+</body>
+</html>

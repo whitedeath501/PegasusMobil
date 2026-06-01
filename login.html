@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PegasusMobil — Acesso Exclusivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: #8a6f32;
+    --black: #050507;
+    --black-2: #0a0a0f;
+    --glass: rgba(255,255,255,0.03);
+    --glass-border: rgba(201,168,76,0.18);
+    --blue-deep: #060d1f;
+    --blue-mid: #0d1a35;
+    --text-primary: #f0ece4;
+    --text-secondary: #a09880;
+    --error: #e05555;
+    --success: #4caf7d;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    font-family: 'Montserrat', sans-serif;
+    background: var(--black);
+    color: var(--text-primary);
+    overflow-x: hidden;
+  }
+
+  /* ── LOADING SCREEN ── */
+  #loader {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--black);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+
+  .loader-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    animation: logoPulse 2s ease-in-out infinite;
+  }
+  .loader-sub {
+    font-size: 0.55rem;
+    letter-spacing: 0.55em;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+  }
+  .loader-bar {
+    width: 160px; height: 1px;
+    background: rgba(201,168,76,0.15);
+    margin-top: 2.5rem; position: relative; overflow: hidden;
+  }
+  .loader-bar::after {
+    content: '';
+    position: absolute; left: -100%; top: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    animation: barSlide 1.4s ease-in-out infinite;
+  }
+
+  @keyframes logoPulse {
+    0%, 100% { opacity: 0.7; } 50% { opacity: 1; }
+  }
+  @keyframes barSlide {
+    0% { left: -100%; } 100% { left: 100%; }
+  }
+
+  /* ── BACKGROUND ── */
+  .bg {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 20%, rgba(13,26,53,0.9) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 10% 80%, rgba(201,168,76,0.07) 0%, transparent 50%),
+      radial-gradient(ellipse 40% 40% at 85% 75%, rgba(6,13,31,0.8) 0%, transparent 60%),
+      linear-gradient(160deg, var(--blue-deep) 0%, var(--black-2) 45%, #08060d 100%);
+  }
+
+  /* Animated grid */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; opacity: 0.04;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.6) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.6) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridDrift 20s linear infinite;
+  }
+  @keyframes gridDrift {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  /* Particles */
+  .particles { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0;
+    animation: particleFly var(--dur, 8s) var(--delay, 0s) ease-in-out infinite;
+  }
+  @keyframes particleFly {
+    0% { transform: translate(0, 100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.3; }
+    100% { transform: translate(var(--tx, 20px), -20px) scale(1.5); opacity: 0; }
+  }
+
+  /* Spotlight */
+  .spotlight {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(circle 400px at var(--mx, 50%) var(--my, 30%),
+      rgba(201,168,76,0.05) 0%, transparent 70%);
+    transition: background 0.1s;
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    position: relative; z-index: 2;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: clamp(3rem, 8vw, 7rem);
+    position: relative;
+    border-right: 1px solid rgba(201,168,76,0.08);
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute; right: 0; top: 15%; bottom: 15%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    opacity: 0.3;
+  }
+
+  .brand-mark {
+    display: flex; flex-direction: column;
+    margin-bottom: 4rem;
+    animation: fadeUp 1s ease 0.3s both;
+  }
+
+  .brand-eyebrow {
+    font-size: 0.55rem;
+    letter-spacing: 0.6em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+  }
+  .brand-name span { color: var(--gold); }
+
+  .brand-tagline {
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-top: 1.2rem;
+  }
+
+  .left-features {
+    display: flex; flex-direction: column; gap: 1.8rem;
+    animation: fadeUp 1s ease 0.5s both;
+  }
+
+  .feature-item {
+    display: flex; align-items: center; gap: 1.2rem;
+  }
+
+  .feature-icon {
+    width: 38px; height: 38px;
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--glass);
+    flex-shrink: 0;
+  }
+  .feature-icon svg { width: 16px; height: 16px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+
+  .feature-text h4 {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: 0.2rem;
+  }
+  .feature-text p {
+    font-size: 0.62rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.03em;
+    line-height: 1.5;
+  }
+
+  .left-footer {
+    margin-top: 4rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: rgba(160,152,128,0.4);
+    text-transform: uppercase;
+    animation: fadeUp 1s ease 0.7s both;
+  }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    display: flex; align-items: center; justify-content: center;
+    padding: clamp(2rem, 5vw, 5rem);
+  }
+
+  .auth-container {
+    width: 100%; max-width: 440px;
+    animation: fadeUp 1s ease 0.4s both;
+  }
+
+  /* Tabs */
+  .auth-tabs {
+    display: flex; gap: 0;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+  }
+  .tab-btn {
+    flex: 1;
+    background: none; border: none;
+    padding: 0.8rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s;
+  }
+  .tab-btn::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0; right: 0;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .tab-btn.active { color: var(--gold); }
+  .tab-btn.active::after { transform: scaleX(1); }
+
+  /* Card */
+  .auth-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--glass-border);
+    border-radius: 2px;
+    padding: clamp(2rem, 4vw, 2.8rem);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+      0 0 0 1px rgba(201,168,76,0.04) inset,
+      0 40px 80px rgba(0,0,0,0.5),
+      0 0 60px rgba(201,168,76,0.03);
+    position: relative; overflow: hidden;
+  }
+  .auth-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+  }
+  .card-subtitle {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  /* Forms */
+  .form-panel { display: none; }
+  .form-panel.active { display: block; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .field {
+    margin-bottom: 1.2rem;
+    position: relative;
+  }
+
+  .field label {
+    display: block;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    transition: color 0.3s;
+  }
+  .field:focus-within label { color: var(--gold); }
+
+  .field input {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 1px;
+    padding: 0.85rem 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 0.05em;
+    outline: none;
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+  }
+  .field input::placeholder { color: rgba(160,152,128,0.35); }
+  .field input:focus {
+    border-color: rgba(201,168,76,0.45);
+    background: rgba(201,168,76,0.03);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.06);
+  }
+  .field input.error-field { border-color: var(--error); }
+
+  .field-hint {
+    font-size: 0.55rem;
+    color: var(--error);
+    margin-top: 0.3rem;
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  .field-hint.visible { display: block; }
+
+  /* Password toggle */
+  .field-pass { position: relative; }
+  .field-pass input { padding-right: 3rem; }
+  .pass-toggle {
+    position: absolute; right: 0.9rem; bottom: 0.85rem;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-secondary); padding: 0;
+    display: flex; transition: color 0.2s;
+  }
+  .pass-toggle:hover { color: var(--gold); }
+  .pass-toggle svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+  /* Forgot password */
+  .forgot-link {
+    display: block; text-align: right;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin-top: -0.6rem; margin-bottom: 1.2rem;
+    transition: color 0.2s;
+  }
+  .forgot-link:hover { color: var(--gold); }
+
+  /* Submit button */
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold), var(--gold-dim));
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    border: none; border-radius: 1px;
+    padding: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--black);
+    cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: background-position 0.5s ease, box-shadow 0.3s;
+    margin-top: 0.5rem;
+  }
+  .btn-primary:hover {
+    background-position: 0% 0;
+    box-shadow: 0 8px 30px rgba(201,168,76,0.25), 0 0 0 1px rgba(201,168,76,0.3);
+  }
+  .btn-primary:active { transform: scale(0.99); }
+  .btn-primary.loading { pointer-events: none; opacity: 0.7; }
+
+  .btn-primary .btn-text { transition: opacity 0.2s; }
+  .btn-primary .btn-spinner {
+    display: none;
+    position: absolute; inset: 0;
+    align-items: center; justify-content: center;
+  }
+  .btn-primary.loading .btn-text { opacity: 0; }
+  .btn-primary.loading .btn-spinner { display: flex; }
+
+  .spinner-ring {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(5,5,7,0.3);
+    border-top-color: var(--black);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Divider */
+  .divider {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 1.5rem 0;
+    font-size: 0.5rem;
+    letter-spacing: 0.3em;
+    color: rgba(160,152,128,0.3);
+    text-transform: uppercase;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1;
+    height: 1px;
+    background: rgba(201,168,76,0.1);
+  }
+
+  /* Alert messages */
+  .alert {
+    padding: 0.8rem 1rem;
+    border-radius: 1px;
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    display: none;
+    border-left: 2px solid;
+  }
+  .alert.visible { display: block; }
+  .alert.error { background: rgba(224,85,85,0.08); border-color: var(--error); color: #e07070; }
+  .alert.success { background: rgba(76,175,125,0.08); border-color: var(--success); color: #6fcf97; }
+
+  /* Recovery form */
+  .recovery-back {
+    background: none; border: none;
+    color: var(--text-secondary);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s;
+    padding: 0;
+  }
+  .recovery-back:hover { color: var(--gold); }
+  .recovery-back svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* Terms */
+  .terms-text {
+    font-size: 0.52rem;
+    color: rgba(160,152,128,0.45);
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+    margin-top: 1.2rem;
+    text-align: center;
+  }
+  .terms-text a { color: var(--gold-dim); text-decoration: none; }
+  .terms-text a:hover { color: var(--gold); }
+
+  /* Corner decorations */
+  .corner {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: rgba(201,168,76,0.3);
+    border-style: solid;
+  }
+  .corner-tl { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
+  .corner-tr { top: 8px; right: 8px; border-width: 1px 1px 0 0; }
+  .corner-bl { bottom: 8px; left: 8px; border-width: 0 0 1px 1px; }
+  .corner-br { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-enter {
+    animation: panelEnter 0.35s ease both;
+  }
+  @keyframes panelEnter {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .page { grid-template-columns: 1fr; }
+    .left-panel {
+      display: none;
+    }
+    .right-panel {
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+      align-items: center;
+    }
+    .auth-container { max-width: 400px; }
+  }
+
+  @media (max-width: 480px) {
+    .form-row { grid-template-columns: 1fr; }
+    .auth-card { padding: 1.8rem 1.4rem; }
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+  /* Mobile logo (only visible when left panel hidden) */
+  .mobile-brand {
+    display: none;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .mobile-brand .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--text-primary);
+  }
+  .mobile-brand .brand-name span { color: var(--gold); }
+  .mobile-brand .brand-tagline {
+    font-size: 0.5rem;
+    letter-spacing: 0.4em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+  }
+  @media (max-width: 900px) {
+    .mobile-brand { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loader">
+  <div class="loader-logo">PEGASUS</div>
+  <div class="loader-sub">Mobil — Luxury Automotive</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- Background -->
+<div class="bg"></div>
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+<div class="spotlight" id="spotlight"></div>
+
+<!-- Page -->
+<div class="page">
+
+  <!-- Left Panel -->
+  <div class="left-panel">
+    <div class="brand-mark">
+      <div class="brand-eyebrow">Est. 2024 — Geneva, Switzerland</div>
+      <div class="brand-name">PEGASUS<br><span>MOBIL</span></div>
+      <div class="brand-tagline">Where Engineering Meets Eternity</div>
+    </div>
+
+    <div class="left-features">
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="feature-text">
+          <h4>Acesso VIP Exclusivo</h4>
+          <p>Portal privativo para clientes da elite global PegasusMobil.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+        </div>
+        <div class="feature-text">
+          <h4>Configurador 3D Premium</h4>
+          <p>Personalize cada detalhe do seu hipercarro em tempo real.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="feature-text">
+          <h4>Lista de Favoritos Privada</h4>
+          <p>Guarde os modelos que capturam sua visão de perfeição.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.6 1.32h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="feature-text">
+          <h4>Consultoria Dedicada</h4>
+          <p>Seu especialista pessoal disponível 24h para requisições.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="left-footer">© 2024 PegasusMobil S.A. — Todos os direitos reservados</div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <div class="auth-container">
+
+      <!-- Mobile Brand -->
+      <div class="mobile-brand">
+        <div class="brand-name">PEGASUS<span>MOBIL</span></div>
+        <div class="brand-tagline">Where Engineering Meets Eternity</div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="tab-btn active" onclick="switchTab('login')">Entrar</button>
+        <button class="tab-btn" onclick="switchTab('register')">Criar Conta</button>
+      </div>
+
+      <!-- Card -->
+      <div class="auth-card">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+
+        <!-- LOGIN FORM -->
+        <div class="form-panel active" id="panel-login">
+          <div class="card-title">Bem-vindo de volta</div>
+          <div class="card-subtitle">Acesse sua conta exclusiva</div>
+
+          <div class="alert" id="login-alert"></div>
+
+          <div class="field">
+            <label>Email</label>
+            <input type="email" id="login-email" placeholder="seu@email.com" autocomplete="email">
+            <div class="field-hint" id="hint-login-email">Email inválido.</div>
+          </div>
+
+          <div class="field field-pass">
+            <label>Senha</label>
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+            <button class="pass-toggle" type="button" onclick="togglePass('login-password', this)" aria-label="Mostrar senha">
+              <svg id="eye-login" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <div class="field-hint" id="hint-login-pass">Senha inválida.</div>
+          </div>
+
+          <a href="#" class="forgot-link" onclick="showRecovery(); return false;">Esqueci minha senha</a>
+
+          <button class="btn-primary" id="btn-login" onclick="handleLogin()">
+            <span class="btn-text">Acessar Portal</span>
+            <span class="btn-spinner"><div class="spinner-ring"></div></span>
+          </button>
+
+          <div class="terms-text">
+            Ao acessar, você concorda com nossos
+            <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>.
+          </div>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div class="form-panel" id="panel-register">
+          <div class="card-title">Junte-se à elite</div>
+          <div class="card-subtitle">Crie sua conta PegasusMobil</div>
+
+          <div class="alert" id="register-alert"></div>
+
+          <div class="form-row">
+            <div class="field">
+              <label>Nome</label>
+              <input type="text" id="reg-first" placeholder="Alexandre" autocomplete="given-name">
+              <div class="field-hint" id="hint-reg-first">Campo obrigatório.</div>
+            </div>
+            <div class="field">
+              <label>Sobrenome</label>
+              <input type="text" id="reg-last" placeholder="Monteiro" autocomplete="family-name">
+              <div class="field-hint" id="hint-reg-last">Campo obrigatório.</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <input type="email" id="reg-email" placeholder="seu@email.com" autocomplete="email">
+            <div class="field-hint" id="hint-reg-email">Email inválido.</div>
+          </div>
+
+          <div class="field field-pass">
+            <label>Senha</label>
+            <input type="password" id="reg-password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+            <button class="pass-toggle" type="button" onclick="togglePass('reg-password', this)" aria-label="Mostrar senha">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <div class="field-hint" id="hint-reg-pass">Mínimo 8 caracteres.</div>
+          </div>
+
+          <div class="field field-pass">
+            <label>Confirmar Senha</label>
+            <input type="password" id="reg-confirm" placeholder="••••••••" autocomplete="new-password">
+            <button class="pass-toggle" type="button" onclick="togglePass('reg-confirm', this)" aria-label="Mostrar senha">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <div class="field-hint" id="hint-reg-confirm">As senhas não coincidem.</div>
+          </div>
+
+          <button class="btn-primary" id="btn-register" onclick="handleRegister()">
+            <span class="btn-text">Criar Conta Exclusiva</span>
+            <span class="btn-spinner"><div class="spinner-ring"></div></span>
+          </button>
+
+          <div class="terms-text">
+            Ao criar uma conta, você concorda com nossos
+            <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>.
+            Todos os dados são protegidos com criptografia de nível militar.
+          </div>
+        </div>
+
+        <!-- RECOVERY FORM -->
+        <div class="form-panel" id="panel-recovery">
+          <button class="recovery-back" onclick="hideRecovery()">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Voltar ao login
+          </button>
+
+          <div class="card-title">Recuperar acesso</div>
+          <div class="card-subtitle">Enviaremos um link seguro ao seu email</div>
+
+          <div class="alert" id="recovery-alert"></div>
+
+          <div class="field">
+            <label>Email cadastrado</label>
+            <input type="email" id="recovery-email" placeholder="seu@email.com" autocomplete="email">
+            <div class="field-hint" id="hint-recovery-email">Email inválido.</div>
+          </div>
+
+          <button class="btn-primary" id="btn-recovery" onclick="handleRecovery()">
+            <span class="btn-text">Enviar Link de Recuperação</span>
+            <span class="btn-spinner"><div class="spinner-ring"></div></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── LOADER ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden');
+  }, 1800);
+});
+
+// ── PARTICLES ──
+(function spawnParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      --dur: ${6 + Math.random() * 10}s;
+      --delay: ${Math.random() * 10}s;
+      --tx: ${(Math.random() - 0.5) * 80}px;
+      opacity: 0;
+    `;
+    container.appendChild(p);
+  }
+})();
+
+// ── SPOTLIGHT ──
+document.addEventListener('mousemove', (e) => {
+  const s = document.getElementById('spotlight');
+  const x = (e.clientX / window.innerWidth * 100).toFixed(1) + '%';
+  const y = (e.clientY / window.innerHeight * 100).toFixed(1) + '%';
+  s.style.background = `radial-gradient(circle 400px at ${x} ${y}, rgba(201,168,76,0.05) 0%, transparent 70%)`;
+});
+
+// ── TAB SWITCH ──
+let currentTab = 'login';
+
+function switchTab(tab) {
+  if (tab === currentTab) return;
+  currentTab = tab;
+
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+  });
+
+  hideAllPanels();
+  const panel = document.getElementById(`panel-${tab}`);
+  panel.classList.add('active', 'panel-enter');
+  panel.addEventListener('animationend', () => panel.classList.remove('panel-enter'), { once: true });
+  clearAlerts();
+}
+
+function hideAllPanels() {
+  document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+}
+
+function showRecovery() {
+  hideAllPanels();
+  const panel = document.getElementById('panel-recovery');
+  panel.classList.add('active', 'panel-enter');
+}
+
+function hideRecovery() {
+  hideAllPanels();
+  const panel = document.getElementById('panel-login');
+  panel.classList.add('active', 'panel-enter');
+  currentTab = 'login';
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === 0));
+}
+
+// ── PASSWORD TOGGLE ──
+function togglePass(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const isPass = input.type === 'password';
+  input.type = isPass ? 'text' : 'password';
+  btn.querySelector('svg').innerHTML = isPass
+    ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+}
+
+// ── VALIDATION ──
+function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+function setError(id, msg) {
+  const hint = document.getElementById(id);
+  if (hint) { hint.textContent = msg; hint.classList.add('visible'); }
+}
+function clearError(id) {
+  const hint = document.getElementById(id);
+  if (hint) hint.classList.remove('visible');
+}
+function clearAlerts() {
+  document.querySelectorAll('.alert').forEach(a => { a.className = 'alert'; a.textContent = ''; });
+}
+function showAlert(id, msg, type = 'error') {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = `alert ${type} visible`;
+}
+
+function setLoading(btnId, loading) {
+  document.getElementById(btnId).classList.toggle('loading', loading);
+}
+
+// ── ENTER KEY ──
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  if (currentTab === 'login') handleLogin();
+  else if (currentTab === 'register') handleRegister();
+});
+
+// ── LOGIN ──
+async function handleLogin() {
+  clearAlerts();
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+  let valid = true;
+
+  clearError('hint-login-email'); clearError('hint-login-pass');
+
+  if (!isValidEmail(email)) { setError('hint-login-email', 'Insira um email válido.'); valid = false; }
+  if (pass.length < 1) { setError('hint-login-pass', 'Insira sua senha.'); valid = false; }
+  if (!valid) return;
+
+  setLoading('btn-login', true);
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem('pegasus_token', data.token);
+      localStorage.setItem('pegasus_user', JSON.stringify(data.user));
+      showAlert('login-alert', '✦ Acesso autorizado. Redirecionando...', 'success');
+      setTimeout(() => {
+        window.location.href = data.user.role === 'admin' ? '/admin.html' : '/dashboard.html';
+      }, 1500);
+    } else {
+      showAlert('login-alert', data.message || 'Credenciais inválidas. Tente novamente.');
+    }
+  } catch {
+    showAlert('login-alert', 'Erro de conexão. Verifique sua internet.');
+  } finally {
+    setLoading('btn-login', false);
+  }
+}
+
+// ── REGISTER ──
+async function handleRegister() {
+  clearAlerts();
+  const first = document.getElementById('reg-first').value.trim();
+  const last = document.getElementById('reg-last').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-password').value;
+  const confirm = document.getElementById('reg-confirm').value;
+  let valid = true;
+
+  ['hint-reg-first','hint-reg-last','hint-reg-email','hint-reg-pass','hint-reg-confirm'].forEach(clearError);
+
+  if (!first) { setError('hint-reg-first', 'Nome é obrigatório.'); valid = false; }
+  if (!last) { setError('hint-reg-last', 'Sobrenome é obrigatório.'); valid = false; }
+  if (!isValidEmail(email)) { setError('hint-reg-email', 'Email inválido.'); valid = false; }
+  if (pass.length < 8) { setError('hint-reg-pass', 'Mínimo 8 caracteres.'); valid = false; }
+  if (pass !== confirm) { setError('hint-reg-confirm', 'As senhas não coincidem.'); valid = false; }
+  if (!valid) return;
+
+  setLoading('btn-register', true);
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName: first, lastName: last, email, password: pass })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      showAlert('register-alert',
+        '✦ Conta criada com sucesso! Verifique seu email para ativar o acesso.', 'success');
+      setTimeout(() => switchTab('login'), 3000);
+    } else {
+      showAlert('register-alert', data.message || 'Erro ao criar conta. Tente novamente.');
+    }
+  } catch {
+    showAlert('register-alert', 'Erro de conexão. Verifique sua internet.');
+  } finally {
+    setLoading('btn-register', false);
+  }
+}
+
+// ── RECOVERY ──
+async function handleRecovery() {
+  clearAlerts();
+  const email = document.getElementById('recovery-email').value.trim();
+  clearError('hint-recovery-email');
+
+  if (!isValidEmail(email)) { setError('hint-recovery-email', 'Insira um email válido.'); return; }
+
+  setLoading('btn-recovery', true);
+
+  try {
+    const res = await fetch('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    showAlert('recovery-alert',
+      '✦ Se este email estiver cadastrado, você receberá as instruções em breve.', 'success');
+  } catch {
+    showAlert('recovery-alert', 'Erro de conexão. Tente novamente.');
+  } finally {
+    setLoading('btn-recovery', false);
+  }
+}
+
+// ── AUTO-FILL CHECK (for already logged in) ──
+(function checkSession() {
+  const token = localStorage.getItem('pegasus_token');
+  const user = localStorage.getItem('pegasus_user');
+  if (token && user) {
+    try {
+      const u = JSON.parse(user);
+      // Optional: redirect if already logged in
+      window.location.href = data.user.role === 'admin' ? '/admin.html' : '/index.html';
+    } catch {}
+  }
+})();
+</script>
+</body>
+</html>

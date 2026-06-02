@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const Message = require('../models/Message');
 const Order = require('../models/Order');
-const Car = require('../models/Car');
+const Car = require('../models/car');
 const { Resend } = require('resend');
 
 const resend = new Resend(process.env.RESEND_API_KEY);

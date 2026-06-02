@@ -28,6 +28,13 @@ app.use('/api/user', require('./backend/routes/user'));
 app.get('/{*path}', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+app.get("/admin", (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/login.html");
+  }
+
+  res.sendFile(path.join(__dirname, "public", "admin.html"));
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`✦ PegasusMobil rodando na porta ${PORT}`));

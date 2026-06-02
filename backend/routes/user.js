@@ -34,7 +34,7 @@ router.get('/cars', async (req, res) => {
 router.post('/orders', auth, async (req, res) => {
   try {
     const { carId, carName, carBrand, carPrice, message } = req.body;
-    const User = require('../models/User');
+    const User = require('../models/user');
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: 'Usuário não encontrado.' });
 
@@ -93,7 +93,7 @@ router.get('/orders', auth, async (req, res) => {
 // ── GET MY MESSAGES ──
 router.get('/messages', auth, async (req, res) => {
   try {
-    const User = require('../models/User');
+    const User = require('../models/user');
     const user = await User.findById(req.user.id);
     const messages = await Message.find({ to: user.email }).sort({ createdAt: -1 });
     res.json({ messages });
@@ -106,7 +106,7 @@ router.get('/messages', auth, async (req, res) => {
 router.post('/messages', auth, async (req, res) => {
   try {
     const { subject, body } = req.body;
-    const User = require('../models/User');
+    const User = require('../models/user');
     const user = await User.findById(req.user.id);
 
     const msg = new Message({

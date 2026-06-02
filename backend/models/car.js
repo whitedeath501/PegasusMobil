@@ -14,4 +14,4 @@ const carSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Car', carSchema);
+module.exports = mongoose.model('car', carSchema);
